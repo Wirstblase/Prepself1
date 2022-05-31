@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.util.function.Consumer
 
 
 class OnSwipeTouchListener(var context: AppCompatActivity?) : OnTouchListener {
@@ -16,6 +17,9 @@ class OnSwipeTouchListener(var context: AppCompatActivity?) : OnTouchListener {
         private const val SWIPE_THRESHOLD = 100
         private const val SWIPE_VELOCITY_THRESHOLD = 100
     }
+
+    lateinit var swipeRight: Runnable
+    lateinit var swipeLeft: Runnable
 
     init {
         gestureDetector = GestureDetector(context, GestureListener())
@@ -43,19 +47,14 @@ class OnSwipeTouchListener(var context: AppCompatActivity?) : OnTouchListener {
                 if (Math.abs(diffX) > Math.abs(diffY)) {
                     if (Math.abs(diffX) > Companion.SWIPE_THRESHOLD && Math.abs(velocityX) > Companion.SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
-                            onSwipeRight()
+                            Toast.makeText(context, "Right", Toast.LENGTH_SHORT).show()
+                            swipeRight.run()
                         } else {
-                            onSwipeLeft()
+                            Toast.makeText(context, "Left", Toast.LENGTH_SHORT).show()
+                            swipeLeft.run()
                         }
                         result = true
                     }
-                } else if (Math.abs(diffY) > Companion.SWIPE_THRESHOLD && Math.abs(velocityY) > Companion.SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom()
-                    } else {
-                        onSwipeTop()
-                    }
-                    result = true
                 }
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -64,13 +63,10 @@ class OnSwipeTouchListener(var context: AppCompatActivity?) : OnTouchListener {
         }
     }
 
-    fun onSwipeRight() {
-        Toast.makeText(context, "RIGHT", Toast.LENGTH_SHORT).show()
+    fun onSwipeRight(consumer: Runnable) {
+        this.swipeRight = consumer
     }
-    fun onSwipeLeft() {
-        Toast.makeText(context, "LEFT", Toast.LENGTH_SHORT).show()
+    fun onSwipeLeft(consumer: Runnable) {
+        this.swipeLeft = consumer
     }
-
-    fun onSwipeTop() {}
-    fun onSwipeBottom() {}
 }

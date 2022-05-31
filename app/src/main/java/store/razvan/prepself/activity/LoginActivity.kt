@@ -2,6 +2,7 @@ package store.razvan.prepself.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -34,6 +35,15 @@ class LoginActivity : AppCompatActivity() {
         resetPasswordButton = binding.resetPasswordButton
         emailAddressInput = binding.emailAddressInput
         passwordInput = binding.passwordInput
+
+
+        resetPasswordButton.background.alpha = 0
+        resetPasswordButton.stateListAnimator = null
+        resetPasswordButton.setTextColor(Color.parseColor("#FFFFFF"))
+
+        registerButton.background.alpha = 0
+        registerButton.stateListAnimator = null
+        registerButton.setTextColor(Color.parseColor("#FFFFFF"))
 
         loginButton.setOnClickListener {
             email = emailAddressInput.text.toString()

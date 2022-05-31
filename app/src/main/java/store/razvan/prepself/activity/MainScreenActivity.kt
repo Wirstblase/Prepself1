@@ -20,29 +20,8 @@ import store.razvan.prepself.utils.*
 
 
 class MainScreenActivity : AppCompatActivity() {
-    companion object {
-        @JvmStatic
-        val MIN_DISTANCE: Int = 150
-    }
 
     private lateinit var binding: ActivityMainScreenBinding
-
-    private var initialLocationHorizontal = 0f
-    private var endLocationHorizontal: Float = 0f
-    private var initialLocationVertical = 0f
-    private var endLocationVertical: Float = 0f
-    private var imageView: ImageView? = null
-
-    private val gestureDetector = GestureDetector(object : SimpleOnGestureListener() {
-        override fun onLongPress(e: MotionEvent) {
-            Toast.makeText(applicationContext, "long press", Toast.LENGTH_SHORT).show()
-        }
-
-        override fun onDoubleTap(e: MotionEvent): Boolean {
-            Toast.makeText(applicationContext, "Double Tap", Toast.LENGTH_SHORT).show()
-            return super.onDoubleTap(e)
-        }
-    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,9 +55,6 @@ class MainScreenActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(getRecipes()!!.body, binding, this)
         viewPager.adapter = adapter
         viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
-
-
-
     }
 
     private fun clickListeners() {
@@ -88,35 +64,6 @@ class MainScreenActivity : AppCompatActivity() {
         binding.menu.userInfoButton.setOnClickListener { openUserProfileActivity(this) }
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                initialLocationVertical = event.y
-                initialLocationHorizontal = event.x
-            }
-            MotionEvent.ACTION_UP -> {
-                endLocationHorizontal = event.x
-                endLocationVertical = event.y
-                val distanceHorizontal: Float = endLocationHorizontal - initialLocationHorizontal
-                val distanceVertical: Float = endLocationVertical - initialLocationVertical
-                if (distanceHorizontal > MIN_DISTANCE) {
-                    Toast.makeText(this, "left -> right swipe", Toast.LENGTH_SHORT).show()
-//                    openUserProfileActivity()
-                } else if (distanceHorizontal < -MIN_DISTANCE) {
-                    Toast.makeText(this, "right -> left swipe", Toast.LENGTH_SHORT).show()
-//                    openChecklistActivity()
-                }
-                if (distanceVertical > MIN_DISTANCE) {
-                    Toast.makeText(this, "up swipe", Toast.LENGTH_SHORT).show()
-                } else if (distanceVertical < -MIN_DISTANCE) {
-                    Toast.makeText(this, "down swipe", Toast.LENGTH_SHORT).show()
-                } else {
-                    println(distanceVertical)
-                }
-            }
-        }
-        return gestureDetector.onTouchEvent(event)
-    }
 
 
     lateinit var test1: View
@@ -136,6 +83,4 @@ class MainScreenActivity : AppCompatActivity() {
             this.cornerRadius = cornerRadius
         }
     }
-
-
 }

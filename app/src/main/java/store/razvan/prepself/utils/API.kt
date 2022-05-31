@@ -18,31 +18,6 @@ import store.razvan.prepself.response.TokenResponse
 import store.razvan.prepself.response.UserInfoResponse
 import java.io.IOException
 
-fun getPrepareNext(context: AppCompatActivity): RecipeResponse? {
-    val request = Request.Builder()
-        .get()
-        .header("token", token)
-        .url(URL + "recipes/preferences/prepare-next")
-        .build()
-
-    client.newCall(request).execute().use { response ->
-        if (response.isSuccessful) {
-            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-            val jsonAdapter = moshi.adapter(RecipeResponse::class.java)
-            val recipe: RecipeResponse = jsonAdapter.fromJson(response.body!!.string())!!
-            if (recipe.success) {
-                return recipe
-            } else {
-                displayMessage(context, "Failed to send email")
-                Log.i("error", recipe.errorMessage.toString())
-            }
-        } else {
-            displayMessage(context, "Failed to send request")
-        }
-    }
-    return null
-}
-
 fun changeEmail(context: AppCompatActivity, newEmail: String) {
     val jsonObject = JSONObject()
     try {
@@ -77,8 +52,6 @@ fun changeEmail(context: AppCompatActivity, newEmail: String) {
 }
 
 fun checkToken(context: AppCompatActivity): Boolean {
-
-
     val request = Request.Builder()
         .get()
         .header("token", token)
@@ -333,6 +306,220 @@ fun updateUserInfo(context: AppCompatActivity, firstNameInput: EditText, lastNam
             displayMessage(context, "Failed to update information")
         } else {
             displayMessage(context, "Information updated")
+        }
+    }
+}
+
+fun getPrepareNext(context: AppCompatActivity): RecipeResponse? {
+    val request = Request.Builder()
+        .get()
+        .header("token", token)
+        .url(URL + "recipes/preferences/prepare-next")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+            val jsonAdapter = moshi.adapter(RecipeResponse::class.java)
+            val recipe: RecipeResponse = jsonAdapter.fromJson(response.body!!.string())!!
+            if (recipe.success) {
+                return recipe
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", recipe.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+    return null
+}
+
+fun getBlacklist(context: AppCompatActivity): RecipeResponse? {
+    val request = Request.Builder()
+        .get()
+        .header("token", token)
+        .url(URL + "recipes/preferences/blacklist")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+            val jsonAdapter = moshi.adapter(RecipeResponse::class.java)
+            val recipe: RecipeResponse = jsonAdapter.fromJson(response.body!!.string())!!
+            if (recipe.success) {
+                return recipe
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", recipe.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+    return null
+}
+
+fun getFavourites(context: AppCompatActivity): RecipeResponse? {
+    val request = Request.Builder()
+        .get()
+        .header("token", token)
+        .url(URL + "recipes/preferences/favourites")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+            val jsonAdapter = moshi.adapter(RecipeResponse::class.java)
+            val recipe: RecipeResponse = jsonAdapter.fromJson(response.body!!.string())!!
+            if (recipe.success) {
+                return recipe
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", recipe.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+    return null
+}
+
+fun removeFromPrepareNext(context: AppCompatActivity, id: Long) {
+    val request = Request.Builder()
+        .delete()
+        .header("token", token)
+        .url(URL + "recipes/preferences/remove-from-prepare-next?recipeId=$id")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val body = response.body!!.string()
+            val readValue = mapper.readValue(body, SimpleResponse::class.java)
+            if (readValue.success) {
+                displayMessage(context, "Recipe removed!")
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", readValue.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+}
+
+fun removeFromBlacklist(context: AppCompatActivity, id: Long) {
+    val request = Request.Builder()
+        .delete()
+        .header("token", token)
+        .url(URL + "recipes/preferences/remove-from-blacklist?recipeId=$id")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val body = response.body!!.string()
+            val readValue = mapper.readValue(body, SimpleResponse::class.java)
+            if (readValue.success) {
+                displayMessage(context, "Recipe removed!")
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", readValue.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+}
+
+fun removeFromFavourites(context: AppCompatActivity, id: Long) {
+    val request = Request.Builder()
+        .delete()
+        .header("token", token)
+        .url(URL + "recipes/preferences/remove-from-favourite?recipeId=$id")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val body = response.body!!.string()
+            val readValue = mapper.readValue(body, SimpleResponse::class.java)
+            if (readValue.success) {
+                displayMessage(context, "Recipe removed!")
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", readValue.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+}
+
+fun addRecipeToPrepareNext(context: AppCompatActivity, id: Long) {
+    val request = Request.Builder()
+        .method("POST", EMPTY_REQUEST)
+        .header("token", token)
+        .url(URL + "recipes/preferences/add-to-prepare-next?recipeId=$id")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val body = response.body!!.string()
+            val readValue = mapper.readValue(body, SimpleResponse::class.java)
+            if (readValue.success) {
+                displayMessage(context, "Recipe added!")
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", readValue.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+}
+
+fun addRecipeToBlacklist(context: AppCompatActivity, id: Long) {
+    val request = Request.Builder()
+        .method("POST", EMPTY_REQUEST)
+        .header("token", token)
+        .url(URL + "recipes/preferences/add-to-blacklist?recipeId=$id")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val body = response.body!!.string()
+            Log.e("HTML", body)
+            val readValue = mapper.readValue(body, SimpleResponse::class.java)
+            if (readValue.success) {
+                displayMessage(context, "Recipe added!")
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", readValue.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
+        }
+    }
+}
+
+fun addRecipeToFavourites(context: AppCompatActivity, id: Long) {
+    val request = Request.Builder()
+        .method("POST", EMPTY_REQUEST)
+        .header("token", token)
+        .url(URL + "recipes/preferences/add-to-favourites?recipeId=$id")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (response.isSuccessful) {
+            val body = response.body!!.string()
+            val readValue = mapper.readValue(body, SimpleResponse::class.java)
+            if (readValue.success) {
+                displayMessage(context, "Recipe added!")
+            } else {
+                displayMessage(context, "Failed to send email")
+                Log.i("error", readValue.errorMessage.toString())
+            }
+        } else {
+            displayMessage(context, "Failed to send request")
         }
     }
 }

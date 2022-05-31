@@ -45,7 +45,7 @@ fun openFridgeActivity(context: AppCompatActivity) {
 }
 
 fun openChecklistActivity(context: AppCompatActivity) {
-    context.startActivity(Intent(context, ChecklistActivity::class.java))
+    context.startActivity(Intent(context, CheckListActivity::class.java))
     context.finish();
 }
 

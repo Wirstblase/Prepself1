@@ -17,7 +17,6 @@
         android:id="@+id/checklist_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
         android:layout_weight="1"
         android:text="CheckBox"
         app:layout_constraintStart_toStartOf="parent"

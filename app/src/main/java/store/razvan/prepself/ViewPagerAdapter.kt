@@ -9,7 +9,10 @@ import kotlinx.android.synthetic.main.item_view_pager.view.*
 import store.razvan.prepself.databinding.ActivityMainScreenBinding
 import store.razvan.prepself.models.Recipe
 import store.razvan.prepself.utils.OnSwipeTouchListener
+import store.razvan.prepself.utils.addRecipeToBlacklist
+import store.razvan.prepself.utils.addRecipeToPrepareNext
 import store.razvan.prepself.utils.getThumbnail
+import kotlin.concurrent.thread
 
 class ViewPagerAdapter(
     private var recipes: List<Recipe>,
@@ -21,12 +24,15 @@ class ViewPagerAdapter(
     var nextId = 0
     var lastKnownId = -1
 
+    lateinit var onSwipeTouchListener: OnSwipeTouchListener
+
     inner class ViewPagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_view_pager, parent, false)
-        view.setOnTouchListener(OnSwipeTouchListener(context))
+        onSwipeTouchListener = OnSwipeTouchListener(context)
+        view.setOnTouchListener(onSwipeTouchListener)
         return ViewPagerViewHolder(view)
     }
 
@@ -42,6 +48,17 @@ class ViewPagerAdapter(
                 recipe.servings,
                 recipe.difficulty
             )
+            onSwipeTouchListener.onSwipeLeft {
+                thread(start = true) {
+                    addRecipeToBlacklist(context, recipe.id.toLong())
+                }.join()
+            }
+
+            onSwipeTouchListener.onSwipeRight {
+                thread(start = true) {
+                    addRecipeToPrepareNext(context, recipe.id.toLong())
+                }.join()
+            }
         }
 
         holder.itemView.ivImage.setImageBitmap(curImage)
@@ -63,6 +80,17 @@ class ViewPagerAdapter(
                 recipe.servings,
                 recipe.difficulty
             )
+            onSwipeTouchListener.onSwipeLeft {
+                thread(start = true) {
+                    addRecipeToBlacklist(context, recipe.id.toLong())
+                }.join()
+            }
+
+            onSwipeTouchListener.onSwipeRight {
+                thread(start = true) {
+                    addRecipeToPrepareNext(context, recipe.id.toLong())
+                }.join()
+            }
         }
         lastKnownId = holder.adapterPosition
     }
